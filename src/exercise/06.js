@@ -84,11 +84,7 @@ function DogProvider({children}) {
   // const value = React.useMemo(() => [state, dispatch], [state])
   const value = [state, dispatch]
 
-  return (
-    <DogContext.Provider value={value}>
-      {children}
-    </DogContext.Provider>
-  )
+  return <DogContext.Provider value={value}>{children}</DogContext.Provider>
 }
 
 function useDogState() {
@@ -121,8 +117,15 @@ Grid = React.memo(Grid)
 function Cell({row, column}) {
   const state = useAppState()
   const cell = state.grid[row][column]
+
+  return <CellImpl cell={cell} row={row} column={column}></CellImpl>
+}
+Cell = React.memo(Cell)
+
+function CellImpl({cell, row, column}) {
   const dispatch = useAppDispatch()
   const handleClick = () => dispatch({type: 'UPDATE_GRID_CELL', row, column})
+
   return (
     <button
       className="cell"
@@ -136,7 +139,7 @@ function Cell({row, column}) {
     </button>
   )
 }
-Cell = React.memo(Cell)
+CellImpl = React.memo(CellImpl)
 
 function DogNameInput() {
   const [state, dispatch] = useDogState()
@@ -165,7 +168,6 @@ function DogNameInput() {
     </form>
   )
 }
-
 
 // we don't need to  memo as it gives additional performance overhead (+ useMemo)
 // DogNameInput = React.memo(DogNameInput)
